@@ -1,30 +1,32 @@
-from __future__ import print_function
+#!/usr/bin/env python
 
-import json
-import boto3
-import csv
+#	Author: Chico
+#	Version: 0.1.0
+#
+#
+#
+import sys;
+import csv;
+import pandas as pd;
 
-print('Loading function')
 
-s3 = boto3.client('s3')
-sns = boto3.client('sns')
+def getList ():
+    lista = ('rent3', 'klbn4', 'abev3', 'bvmf3', 'embr3', 'hype3')
+    return lista
+
+def openCsv (stock_name):
+    csvFile = open('CSV/' + stock_name + '.csv')
+    csvReader = csv.reader(csvFile)
+    return csvReader
 
 def closeList (csv):
     tempList = []
-    subList = []
-    for i in range(len(csv)):
-        if i == 0:
+    for row in csv:
+        if csv.line_num == 1:
             continue
-        subList = str(csv[i]).split(',')
-        tempList.append(subList[4])
+        tempList.append(row[4])
     tempList.reverse()
     return tempList
-
-def tsi (emaList, emaAbsList):
-    tsiList = []
-    for i in range(len(emaList)):
-        tsiList.append(100*(emaList[i]/emaAbsList[i]))
-    return tsiList
 
 def momentum (closeList):
     momentumList = []
@@ -77,15 +79,24 @@ def ema(s, n):
 
     return ema
 
-def lambda_handler(event, context):
-    bucket = event['Records'][0]['s3']['bucket']['name']
-    key = event['Records'][0]['s3']['object']['key']
+def emapandas(s, n):
+    data = { 'stock' : s}
+    df = pd.DataFrame(data)
+    emapandas = df.ewm(span=25).mean()
+    return emapandas
 
-    try:
-        response = s3.get_object(Bucket=bucket, Key=key)
-        csvReader = response['Body'].read().decode("utf-8")
-        ListTotal = str(csvReader).splitlines()
-        ListValues = closeList(ListTotal)
+def tsi (emaList, emaAbsList):
+    tsiList = []
+    for i in range(len(emaList)):
+        tsiList.append(100*(emaList[i]/emaAbsList[i]))
+    return tsiList
+
+
+def main():
+    stockList = getList()
+    for i in range(len(stockList)):
+        csvReader = openCsv(stockList[i])
+        ListValues = closeList(csvReader)
         momentumValues = momentum(ListValues)
         momentumAbsValues = momentumAbs(ListValues)
 
@@ -96,27 +107,13 @@ def lambda_handler(event, context):
 
         tsiList = tsi(ema13ema25, ema13ema25Abs)
         tsi7List = ema(tsiList, 7)
+
         if tsiList[-1] > tsi7List[-1] and tsiList[-1] > 0:
-            teste = sns.publish(
-                TopicArn='arn:aws:sns:us-east-1:167798398842:CRM',
-                Message='Compra: ' + str(key),
-                Subject='Aviso de Compra'
-                )
+            print (stockList[i] + ': ' + 'Compra')
         elif tsiList[-1] < tsi7List[-1] and tsi7List < 0:
-            teste = sns.publish(
-                TopicArn='arn:aws:sns:us-east-1:167798398842:CRM',
-                Message='Venda: ' + str(key),
-                Subject='Aviso de Venda'
-                )
+            print (stockList[i] + ': ' + 'Vende')
         else:
-            print (str(key) + ': ' + 'Faz nada')
+            print (stockList[i] + ': ' + 'Faz nada')
 
-
-
-        return response['ContentType']
-
-
-    except Exception as e:
-        print(e)
-        print('Error getting object {} from bucket {}. Make sure they exist and your bucket is in the same region as this function.'.format(key, bucket))
-        raise e
+if __name__ == '__main__':
+	sys.exit(main())
