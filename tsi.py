@@ -8,11 +8,26 @@
 import sys;
 import csv;
 import pandas as pd;
-
+from datetime import datetime;
+import pandas_datareader.data as web;
 
 def getList ():
     lista = ('rent3', 'klbn4', 'abev3', 'bvmf3', 'embr3', 'hype3')
     return lista
+
+def downloadCSV ():
+    # Code Fount at: http://www.theodor.io/scraping-google-finance-data-using-pandas/
+    # Specify Date Range
+    start = datetime(2015, 8, 1)
+    end = datetime.today()
+
+    # Specify symbol
+    symbol = 'rent3'
+
+    aapl_from_google = web.DataReader("%s" % symbol, 'google', start, end)
+
+    aapl_from_google.to_csv('%s.csv' % symbol)
+
 
 def openCsv (stock_name):
     csvFile = open('sampleCSV/' + stock_name + '.csv')
@@ -114,6 +129,8 @@ def main():
             print (stockList[i] + ': ' + 'Vende')
         else:
             print (stockList[i] + ': ' + 'Faz nada')
+
+        downloadCSV()
 
 if __name__ == '__main__':
 	sys.exit(main())
