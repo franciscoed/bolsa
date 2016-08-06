@@ -15,7 +15,7 @@ def getList ():
     return lista
 
 def openCsv (stock_name):
-    csvFile = open('CSV/' + stock_name + '.csv')
+    csvFile = open('sampleCSV/' + stock_name + '.csv')
     csvReader = csv.reader(csvFile)
     return csvReader
 
