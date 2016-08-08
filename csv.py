@@ -10,13 +10,18 @@ import csv;
 import urllib2;
 
 def downloadCSV (stock):
-    url = 'http://www.google.com/finance/historical?q=' + stock + '&histperiod=daily&startdate=Aug+8+2015&enddate=Aug+8+2016&output=csv'
-    response = urllib2.urlopen(url).read()
-    cr = csv.reader(response)
-    for row in cr:
-        print (row)
-    #return response
+    #url = 'http://www.google.com/finance/historical?q=' + stock + '&histperiod=daily&startdate=Aug+8+2015&enddate=Aug+8+2016&output=csv'
+    url = 'http://www.google.com/finance/historical?q=' + urllib2.quote('rent3') + '&histperiod=' + urllib2.quote('daily') + \
+    '&startdate=' + urllib2.quote('Aug+8+2015') + '&enddate=' + urllib2.quote('Aug+8+2016') + '&output=csv'
 
+    #quotedUrl = urllib.quote(url, ':/?=&+')
+    print(url)
+    try:
+        response = urllib2.urlopen(url).read()
+    except Exception as e:
+        print(e)
+        raise e
+    return response
 
 def openCsv (stock_name):
     csvReader = csv.reader(stock_name)
