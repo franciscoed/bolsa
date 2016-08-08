@@ -4,6 +4,7 @@ import json
 import boto3
 import csv
 import urllib2
+import urllib
 
 
 print('Loading function')
@@ -13,14 +14,16 @@ s3 = boto3.client('s3')
 
 
 def downloadCSV (stock):
-    #url = 'http://www.google.com/finance/historical?q=' + stock + '&histperiod=daily&startdate=Aug+8+2015&enddate=Aug+8+2016&output=csv'
-    url = 'http://www.google.com/finance/historical?q=' + urllib2.quote('rent3') + '&histperiod=' + urllib2.quote('daily') + \
-    '&startdate=' + urllib2.quote('Aug+8+2015') + '&enddate=' + urllib2.quote('Aug+8+2016') + '&output=' + urllib2.quote('csv')
+    url = 'http://www.google.com/finance/historical?q=BVMF%3ARENT3&output=csv'
+    #url = 'https://www.google.com/finance/historical?q=rent3&output=csv'
+    #url = 'http://www.google.com/finance/historical?q=' + urllib.quote('rent3') + '&histperiod=' + urllib.quote('daily') + \
+    #'&startdate=' + urllib.quote('Aug+8+2015') + '&enddate=' + urllib.quote('Aug+8+2016') + '&output=' + urllib.quote('csv')
 
-    req = urllib2.Request(url)
     print(url)
     try:
-        response = urllib2.urlopen(req)
+
+        response = urllib2.urlopen(url).read()
+        print(response)
     except Exception as e:
         print(e)
         raise e
@@ -33,7 +36,7 @@ def lambda_handler(event, context):
     csv=downloadCSV(key)
 
     try:
-        #response = s3.put_object(Bucket=bucket, Key=key, Body=csv)
+        response = s3.put_object(Bucket=bucket, Key=key, Body=csv)
         print('upload ok')
         print(csv)
         #return response
