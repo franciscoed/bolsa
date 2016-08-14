@@ -97,23 +97,25 @@ def lambda_handler(event, context):
         tsiList = tsi(ema13ema25, ema13ema25Abs)
         tsi7List = ema(tsiList, 7)
         if tsiList[-1] > tsi7List[-1] and tsiList[-1] > 0:
-            teste = sns.publish(
+            envio = sns.publish(
                 TopicArn='arn:aws:sns:us-east-1:167798398842:CRM',
                 Message='Compra: ' + str(key),
                 Subject='Aviso de Compra'
                 )
         elif tsiList[-1] < tsi7List[-1] and tsi7List < 0:
-            teste = sns.publish(
+            envio = sns.publish(
                 TopicArn='arn:aws:sns:us-east-1:167798398842:CRM',
                 Message='Venda: ' + str(key),
                 Subject='Aviso de Venda'
                 )
         else:
-            print (str(key) + ': ' + 'Faz nada')
+            envio = sns.publish(
+                TopicArn='arn:aws:sns:us-east-1:167798398842:CRM',
+                Message='Venda: ' + str(key),
+                Subject='Aviso de Nada'
+                )
 
-
-
-        return response['ContentType']
+        return envio
 
 
     except Exception as e:
