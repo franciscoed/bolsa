@@ -111,7 +111,7 @@ def lambda_handler(event, context):
         else:
             envio = sns.publish(
                 TopicArn='arn:aws:sns:us-east-1:167798398842:CRM',
-                Message='Venda: ' + str(key),
+                Message='Nada: ' + str(key),
                 Subject='Aviso de Nada'
                 )
 
