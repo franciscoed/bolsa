@@ -8,6 +8,10 @@ print('Loading function')
 
 s3 = boto3.client('s3')
 sns = boto3.client('sns')
+dynamo = boto3.client('dynamodb')
+#dynamodb.put_item(TableName=TSI, Item={'Name':{'S': str(key)},'key2':{'N':'value2'})
+#dynamodb.get_item(TableName=TSI, Key={'Name':{'S':'Banana'}})
+
 
 def closeList (csv):
     tempList = []
