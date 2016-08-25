@@ -24,27 +24,6 @@ def closeList (csv):
     tempList.reverse()
     return tempList
 
-def tsi (emaList, emaAbsList):
-    tsiList = []
-    for i in range(len(emaList)):
-        tsiList.append(100*(emaList[i]/emaAbsList[i]))
-    return tsiList
-
-def momentum (closeList):
-    momentumList = []
-    for i in range(len(closeList)):
-        if i == 0:
-            continue
-        momentumList.append(round(float(closeList[i])-float(closeList[i-1]),2))
-    return momentumList
-
-def momentumAbs (closeList):
-    momentumAbsList = []
-    for i in range(len(closeList)):
-        if i == 0:
-            continue
-        momentumAbsList.append(abs(round(float(closeList[i])-float(closeList[i-1]),2)))
-    return momentumAbsList
 
 
 def ema(s, n):
@@ -90,34 +69,8 @@ def lambda_handler(event, context):
         csvReader = response['Body'].read().decode("utf-8")
         ListTotal = str(csvReader).splitlines()
         ListValues = closeList(ListTotal)
-        momentumValues = momentum(ListValues)
-        momentumAbsValues = momentumAbs(ListValues)
 
-        ema25Momentum = ema(momentumValues,25)
-        ema13ema25 = ema(ema25Momentum,13)
-        ema25MomentumAbs = ema(momentumAbsValues,25)
-        ema13ema25Abs = ema(ema25MomentumAbs,13)
 
-        tsiList = tsi(ema13ema25, ema13ema25Abs)
-        tsi7List = ema(tsiList, 7)
-        if tsiList[-1] > tsi7List[-1] and tsiList[-1] > 0:
-            envio = sns.publish(
-                TopicArn='arn:aws:sns:us-east-1:167798398842:CRM',
-                Message='Compra: ' + str(key),
-                Subject='Aviso de Compra'
-                )
-        elif tsiList[-1] < tsi7List[-1] and tsi7List < 0:
-            envio = sns.publish(
-                TopicArn='arn:aws:sns:us-east-1:167798398842:CRM',
-                Message='Venda: ' + str(key),
-                Subject='Aviso de Venda'
-                )
-        else:
-            envio = sns.publish(
-                TopicArn='arn:aws:sns:us-east-1:167798398842:CRM',
-                Message='Nada: ' + str(key),
-                Subject='Aviso de Nada'
-                )
 
         return envio
 
