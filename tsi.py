@@ -7,12 +7,13 @@
 #
 import sys;
 import csv;
-import pandas as pd;
+#import pandas as pd;
 from datetime import datetime;
-import pandas_datareader.data as web;
+#import pandas_datareader.data as web;
 
 def getList ():
-    lista = ('rent3', 'klbn4', 'abev3', 'bvmf3', 'embr3', 'hype3')
+    #lista = ('rent3', 'klbn4', 'abev3', 'bvmf3', 'embr3', 'hype3')
+    lista = ('hype3',)
     return lista
 
 def downloadCSV ():
@@ -24,9 +25,9 @@ def downloadCSV ():
     # Specify symbol
     symbol = 'rent3'
 
-    aapl_from_google = web.DataReader("%s" % symbol, 'google', start, end)
+    #aapl_from_google = web.DataReader("%s" % symbol, 'google', start, end)
 
-    aapl_from_google.to_csv('%s.csv' % symbol)
+    #aapl_from_google.to_csv('%s.csv' % symbol)
 
 
 def openCsv (stock_name):
@@ -112,6 +113,7 @@ def main():
     for i in range(len(stockList)):
         csvReader = openCsv(stockList[i])
         ListValues = closeList(csvReader)
+
         momentumValues = momentum(ListValues)
         momentumAbsValues = momentumAbs(ListValues)
 
@@ -122,6 +124,7 @@ def main():
 
         tsiList = tsi(ema13ema25, ema13ema25Abs)
         tsi7List = ema(tsiList, 7)
+        print ema25Momentum
 
         if tsiList[-1] > tsi7List[-1] and tsiList[-1] > 0:
             print (stockList[i] + ': ' + 'Compra')
