@@ -9,8 +9,10 @@ import sys;
 import csv;
 from datetime import datetime;
 
+
 def getList ():
-    lista = ('rent3', 'klbn4', 'abev3', 'bvmf3', 'embr3', 'hype3')
+    #lista = ('rent3', 'klbn4', 'abev3', 'bvmf3', 'embr3', 'hype3')
+    lista = ('hype3',)
     return lista
 
 def downloadCSV ():
@@ -37,7 +39,7 @@ def closeList (csv):
     for row in csv:
         if csv.line_num == 1:
             continue
-        tempList.append(row[4])
+        tempList.append(round(float(row[4]),2))
     tempList.reverse()
     return tempList
 
@@ -47,17 +49,47 @@ def closeList (csv):
 def sma(s, n):
 
     sma = []
-
-    #get n sma first and calculate the next n period ema
-    tmp = sum(s[:n]) / n
-    sma.append(tmp)
-
-    #now calculate the rest of the values
-    for i in s[n+1:]:
-        tmp = sum(s[i:i+n])
-        ema.append(tmp)
+    dp = []
+    upper = []
+    lower = []
+    bandwidth = []
+    j = 0
+    for i in s[n-1:]:
+        tmp = sum(s[j:j+n])/n
+        dptmp = pstdev(s[j:j+n])
+        uppertmp = round(tmp + (dptmp*2),2)
+        lowertmp = round(tmp - (dptmp*2),2)
+        j = j+1
+        sma.append(round(tmp,2))
+        dp.append(round(dptmp,2))
+        upper.append(round(uppertmp,2))
+        lower.append(round(lowertmp,2))
+        bandwidth.append(round(uppertmp - lowertmp,2))
+    print sma
 
     return sma
+
+def mean(data):
+    """Return the sample arithmetic mean of data."""
+    n = len(data)
+    if n < 1:
+        raise ValueError('mean requires at least one data point')
+    return sum(data)/n # in Python 2 use sum(data)/float(n)
+
+def _ss(data):
+    """Return sum of square deviations of sequence data."""
+    c = mean(data)
+    ss = sum((x-c)**2 for x in data)
+    return ss
+
+def pstdev(data):
+    """Calculates the population standard deviation."""
+    n = len(data)
+    if n < 2:
+        raise ValueError('variance requires at least two data points')
+    ss = _ss(data)
+    pvar = ss/n # the population variance
+    return pvar**0.5
 
 
 
@@ -66,7 +98,7 @@ def main():
     for i in range(len(stockList)):
         csvReader = openCsv(stockList[i])
         ListValues = closeList(csvReader)
-        sma = sma(ListValues, 20)
+        smaValues = sma(ListValues, 20)
 
 
 
