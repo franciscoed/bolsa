@@ -66,7 +66,7 @@ def bb(s, n):
         lower.append(round(lowertmp,2))
         bandwidth.append(round(uppertmp - lowertmp,2))
 
-    return sma
+    return sma, dp, upper, lower, bandwidth
 
 def mean(data):
     #Function from: http://stackoverflow.com/questions/15389768/standard-deviation-of-a-list
@@ -100,7 +100,8 @@ def main():
     for i in range(len(stockList)):
         csvReader = openCsv(stockList[i])
         ListValues = closeList(csvReader)
-        bbValues = bb(ListValues, 20)
+        smaValues, dpValues, upperValues, lowerValues, bandwidthValues = bb(ListValues, 20)
+        
 
 
 
