@@ -46,7 +46,7 @@ def closeList (csv):
 
 
 
-def sma(s, n):
+def bb(s, n):
 
     sma = []
     dp = []
@@ -65,7 +65,6 @@ def sma(s, n):
         upper.append(round(uppertmp,2))
         lower.append(round(lowertmp,2))
         bandwidth.append(round(uppertmp - lowertmp,2))
-    print sma
 
     return sma
 
@@ -101,7 +100,7 @@ def main():
     for i in range(len(stockList)):
         csvReader = openCsv(stockList[i])
         ListValues = closeList(csvReader)
-        smaValues = sma(ListValues, 20)
+        bbValues = bb(ListValues, 20)
 
 
 
