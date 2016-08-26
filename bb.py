@@ -70,6 +70,7 @@ def sma(s, n):
     return sma
 
 def mean(data):
+    #Function from: http://stackoverflow.com/questions/15389768/standard-deviation-of-a-list
     """Return the sample arithmetic mean of data."""
     n = len(data)
     if n < 1:
@@ -77,12 +78,14 @@ def mean(data):
     return sum(data)/n # in Python 2 use sum(data)/float(n)
 
 def _ss(data):
+    #Function from: http://stackoverflow.com/questions/15389768/standard-deviation-of-a-list
     """Return sum of square deviations of sequence data."""
     c = mean(data)
     ss = sum((x-c)**2 for x in data)
     return ss
 
 def pstdev(data):
+    #Function from: http://stackoverflow.com/questions/15389768/standard-deviation-of-a-list
     """Calculates the population standard deviation."""
     n = len(data)
     if n < 2:
