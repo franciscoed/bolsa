@@ -13,7 +13,7 @@ from datetime import datetime;
 
 def getList ():
     #lista = ('rent3', 'klbn4', 'abev3', 'bvmf3', 'embr3', 'hype3')
-    lista = ('hype3',)
+    lista = ('vale5',)
     return lista
 
 def downloadCSV ():
@@ -115,7 +115,7 @@ def main():
         ListValues = closeList(csvReader)
 
         momentumValues = momentum(ListValues)
-        momentumAbsValues = momentumAbs(ListValues)
+	momentumAbsValues = momentumAbs(ListValues)
 
         ema25Momentum = ema(momentumValues,25)
         ema13ema25 = ema(ema25Momentum,13)
@@ -124,8 +124,7 @@ def main():
 
         tsiList = tsi(ema13ema25, ema13ema25Abs)
         tsi7List = ema(tsiList, 7)
-        print ema25Momentum
-
+	print tsiList
         if tsiList[-1] > tsi7List[-1] and tsiList[-1] > 0:
             print (stockList[i] + ': ' + 'Compra')
         elif tsiList[-1] < tsi7List[-1] and tsi7List < 0:
