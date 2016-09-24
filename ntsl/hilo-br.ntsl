@@ -1,0 +1,30 @@
+var
+  nHiLo            : Float;
+  teste            : Boolean;
+begin          
+  nHiLo := HiLoActivator(3)|1|;
+  if (nHilo = 1) and not(isBought) then
+    begin
+      BuyToCoverAtMarket;
+      BuyAtMarket;
+    end
+  else if (nHilo = 1) and (isBought) then
+    begin
+      teste := true;
+    end
+  else if (nHilo = 0) and not(isSold) then
+    begin
+      SellToCoverAtMarket;
+      SellShortAtMarket;
+    end
+  else if (nHilo = 0) and (isSold) then
+    begin
+      teste := true;
+    end
+  else
+    begin
+      BuyToCoverAtMarket;
+      SellToCoverAtMarket;
+    end;   
+ 
+end;
