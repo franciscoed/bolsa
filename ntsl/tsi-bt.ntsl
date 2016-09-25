@@ -3,6 +3,7 @@ var
   ema13ema25abs    : Float;
   tsi              : Float;
   tsi7             : Float;
+  teste            : Boolean;
 
 begin          
   //ema13ema25 := MediaExp(13,MediaExp(25,Momentum(1,1,0)));
@@ -21,12 +22,20 @@ begin
   tsi7 := MediaExp(7,tsi);
     
 
-  if (tsi > tsi7) then
+  if (tsi > tsi7) and not(isBought) then
     begin
       BuyToCoverAtMarket;
       BuyAtMarket;
     end
-  else if (tsi < tsi7) then
+  else if (tsi > tsi7) and (isBought) then
+    begin
+      teste := true;
+    end
+  else if (tsi < tsi7) and (isSold) then
+    begin
+      teste := true;
+    end
+  else if (tsi < tsi7) and not(isSold) then
     begin
       SellToCoverAtMarket;
       SellShortAtMarket;
@@ -38,4 +47,3 @@ begin
     end;
     
 end;
-
