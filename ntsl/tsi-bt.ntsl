@@ -1,4 +1,4 @@
-var
+ var
   ema13ema25       : Float;
   ema13ema25abs    : Float;
   tsi              : Float;
